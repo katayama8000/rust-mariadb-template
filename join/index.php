@@ -1,9 +1,19 @@
 <?php
-$form = [];
+$form = [
+    'name' => ''
+];
 $error = [];
-$form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-if ($form['name'] === '') {
-    $error['name'] = 'blank';
+
+function h($value)
+{
+    return htmlspecialchars($value, ENT_QUOTES);
+}
+// フォームの内容をチェック
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    if ($form['name'] === '') {
+        $error['name'] = 'blank';
+    }
 }
 ?>
 
@@ -31,7 +41,7 @@ if ($form['name'] === '') {
                 <dl>
                     <dt>ニックネーム<span class="required">必須</span></dt>
                     <dd>
-                        <input type="text" name="name" size="35" maxlength="255" value="<?php echo htmlspecialchars($form['name'], ENT_QUOTES);?>" />
+                        <input type="text" name="name" size="35" maxlength="255" value="<?php echo h($form['name']); ?>" />
                         <?php if (isset($error['name']) && $error['name'] === 'blank') : ?>
                             <p class="error">* ニックネームを入力してください</p>
                         <?php endif; ?>
