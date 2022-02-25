@@ -1,17 +1,15 @@
 <?php
+session_start();
+require('../library.php');
 $form = [
     'name' => '',
     'email' => '',
     'password' => '',
-
+    'image' => ''
 ];
 $error = [];
 
-//文字コード変換
-function h($value)
-{
-    return htmlspecialchars($value, ENT_QUOTES);
-}
+
 
 // フォームの内容をチェック
 //リクエストのメソッドを判定
@@ -36,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //画像のチェック
     $image = $_FILES['image'];
+    //ファイルの名前がありエラーが起こっていない
     if ($image['name'] !== '' && $image['error'] === 0) {
+        //pngやjpegとかを判断する
         $type = mime_content_type($image['tmp_name']);
-        var_dump($type);
+        var_dump("type", $type);
         //pngでもjpegでもない場合
         if ($type !== 'image/png' && $type !== 'image/jpeg') {
             $error['image'] = 'type';
@@ -46,7 +46,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     //errorが何もないとき
-    if(empty($error)){
+    if (empty($error)) {
+        $_SESSION['form'] = $form;
+        //画像のアップロード
+        if ($image['name'] !== '') {
+            $file_name = date('YmdHis') . '_' . $image['name'];
+            if (!move_uploaded_file($image['tmp_name'], '../member_picture/' . $file_name)) {
+                die('ファイルのアップロードに失敗しました');
+            }
+            var_dump("成功", $file_name);
+            $_SESSION['form']['image'] = $file_name;
+            var_dump("セッションの中身", $_SESSION['form']);
+        } else {
+            var_dump("失敗", $file_name);
+            $_SESSION['form']['image'] = '';
+        }
         header('location:check.php');
         exit();
     }
