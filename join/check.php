@@ -10,6 +10,31 @@ if (isset($_SESSION['form'])) {
 	header(('location:index.php'));
 	exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$db = new mysqli("localhost:8889", 'root', 'root', 'min_bbs');
+	if (!$db) {
+		echo ("エラー１");
+		die($db->error);
+	}
+	$stmt = $db->prepare('insert into members (name,email,password,picture) VALUES(?,?,?,?)');
+	// if (!$stmp) {
+	// 	echo ("エラー２");
+	// 	die($db->error);
+	// }
+	//passwordを隠す
+	$password = password_hash($form['password'], PASSWORD_DEFAULT);
+	$stmt->bind_param('ssss', $form['name'], $form['email'], $password, $form['image']);
+	$success = $stmt->execute();
+	if (!$success) {
+		echo ("エラー３");
+		die($db->error);
+	}
+
+	//セッションを消す
+	unset($_SESSION['form']);
+	header('Location:thanks.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +72,10 @@ if (isset($_SESSION['form'])) {
 						<img src="../member_picture/<?php echo h($form['image']); ?>" width="100" alt="" />
 					</dd>
 				</dl>
-				<div><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> | <input type="submit" value="登録する" /></div>
+				<div>
+					<!-- <a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> |  -->
+					<input type="submit" value="登録する" />
+				</div>
 			</form>
 		</div>
 
