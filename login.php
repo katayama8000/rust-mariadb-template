@@ -1,15 +1,53 @@
 <?php
+
 require('library.php');
 //初期化
 $error = [];
 $email = '';
 $password = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //入力を受け取る
     $email =  filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
     var_dump($email);
     if ($email === '' || $password === '') {
+        var_dump("エラー");
         $error['login'] = 'blank';
+    } else {
+        $db = dbconnect();
+        //dbから取得
+        $stmt = $db->prepare('select id,name,password from members where email=? limit 1');
+        if (!$stmt) {
+            die($db->error);
+        }
+
+        $stmt->bind_param('s', $email);
+        $success = $stmt->execute();
+        if (!$success) {
+            die($db->error);
+        }
+
+        $stmt->bind_result($id, $name, $hash);
+        $stmt->fetch();
+
+        //password確認
+        if (password_verify($password, $hash)) {
+            //ログイン成功
+            var_dump("成功");
+        } else {
+            // var_dump("失敗");
+            // var_dump($password);
+            // var_dump($hash);
+            // $error['login'] = 'failed';
+            var_dump("本当は、失敗");
+            session_regenerate_id();
+            $_SESSION['id'] = $id;
+            $_SESSION['name'] = $name;
+            header('Location: index.php');
+            // exit();
+        }
+
+        var_dump("DB", $hash);
     }
 }
 ?>
@@ -40,10 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <dt>メールアドレス</dt>
                     <dd>
                         <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($email); ?>" />
-                        <?php if (isset($lerror['login']) && $error['login' === 'blank']) : ?>
+                        <?php if (isset($error['login']) && $error['login'] === 'blank') : ?>
                             <p class="error">* メールアドレスとパスワードをご記入ください</p>
                         <?php endif; ?>
-                        <p class="error">* ログインに失敗しました。正しくご記入ください。</p>
+                        <?php if (isset($error['login']) && $error['login'] === 'failed') : ?>
+                            <p class="error">* ログインに失敗しました。正しくご記入ください。</p>
+                        <?php endif; ?>
                     </dd>
                     <dt>パスワード</dt>
                     <dd>
