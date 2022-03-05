@@ -23,9 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
     if ($form['name'] === '') {
         $error['name'] = 'blank';
-        echo ("aaaaaaaaaaaaaaaaaaaaa");
     } else {
-        echo ("aaaaaaaaaaaaaaaaaaaaa");
         //db接続
         $db = dbconnect();
         //件数取得
@@ -43,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->fetch();
 
         var_dump($cnt);
-        echo ("aaaaaaaaaaaaaaaaaaaaa");
         if ($cnt > 0) {
             $error['email'] = 'duplicate';
         }
