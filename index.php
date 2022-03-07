@@ -1,14 +1,15 @@
 <?php
 session_start();
 require('library.php');
+var_dump($_SESSION['id']);
+var_dump($_SESSION['name']);
 
 //セッションの情報がなければ、ログインに戻る
-$id = $_SESSION["id"];
-$name = $_SESSION["name"];
 if (isset($_SESSION["id"]) && isset($_SESSION["name"])) {
+    $name = $_SESSION["name"];
 } else {
-    // header('Location:login.php');
-    // exit();
+    header('Location:login.php');
+    exit();
 }
 
 //メッセージの投稿
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="text-align: right"><a href="logout.php">ログアウト</a></div>
             <form action="" method="post">
                 <dl>
-                    <dt>○○さん、メッセージをどうぞ</dt>
+                    <dt><?php echo h($name); ?>さん、メッセージをどうぞ</dt>
                     <dd>
                         <textarea name="message" cols="50" rows="5"></textarea>
                     </dd>

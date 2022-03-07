@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require('library.php');
 //初期化
 $error = [];
@@ -10,20 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email =  filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
     var_dump($email);
+    //記入していなければエラー
     if ($email === '' || $password === '') {
         var_dump("エラー");
         $error['login'] = 'blank';
     } else {
+        var_dump("エラー0");
         $db = dbconnect();
         //dbから取得
         $stmt = $db->prepare('select id,name,password from members where email=? limit 1');
+        var_dump($stmt);
         if (!$stmt) {
+            var_dump("エラー1");
             die($db->error);
         }
 
         $stmt->bind_param('s', $email);
         $success = $stmt->execute();
+        var_dump($success);
         if (!$success) {
+            var_dump("エラー2");
             die($db->error);
         }
 
@@ -41,10 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // $error['login'] = 'failed';
             var_dump("本当は、失敗");
             session_regenerate_id();
+            var_dump($id);
+            var_dump($name);
+
             $_SESSION['id'] = $id;
             $_SESSION['name'] = $name;
+            var_dump($_SESSION['id']);
+            var_dump($_SESSION['name']);
+
             header('Location: index.php');
-            // exit();
+            exit();
         }
 
         var_dump("DB", $hash);
@@ -65,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div id="wrap">
         <div id="head">
-            <h1>ログインする</h1>
+            <h1>ログインする!</h1>
         </div>
         <div id="content">
             <div id="lead">

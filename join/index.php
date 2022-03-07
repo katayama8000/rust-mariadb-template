@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('../library.php');
+var_dump($_GET['action']);
 
 if (isset($_GET['action']) && $_GET['action'] === 'rewrite' && isset($_SESSION['form'])) {
     $form = $_SESSION['form'];
@@ -13,8 +14,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'rewrite' && isset($_SESSION['
     ];
 }
 $error = [];
-
-
 
 // フォームの内容をチェック
 //リクエストのメソッドを判定
@@ -122,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="error">* ニックネームを入力してください</p>
                         <?php endif; ?>
                     </dd>
-                    <dt>メールアドレスす<span class="required">必須</span></dt>
+                    <dt>メールアドレス<span class="required">必須</span></dt>
                     <dd>
                         <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($form['email']); ?>" />
                         <?php if (isset($error['email']) && $error['email'] === 'blank') : ?>
