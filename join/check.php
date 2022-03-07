@@ -4,7 +4,6 @@ require('../library.php');
 
 if (isset($_SESSION['form'])) {
 	$form = $_SESSION['form'];
-	var_dump($form);
 } else {
 	//直接呼び出しても正しくないのでindex.phpに戻す
 	header(('location:index.php'));
@@ -12,11 +11,8 @@ if (isset($_SESSION['form'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$db = new mysqli("localhost:8889", 'root', 'root', 'min_bbs');
-	if (!$db) {
-		echo ("エラー１");
-		die($db->error);
-	}
+
+	$db = dbconnect();
 	$stmt = $db->prepare('insert into members (name,email,password,picture) VALUES(?,?,?,?)');
 	// if (!$stmp) {
 	// 	echo ("エラー２");
@@ -73,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					</dd>
 				</dl>
 				<div>
-					<!-- <a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> |  -->
+					<a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a> |
 					<input type="submit" value="登録する" />
 				</div>
 			</form>

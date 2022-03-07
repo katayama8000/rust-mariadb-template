@@ -1,15 +1,19 @@
 <?php
 session_start();
 require('../library.php');
-$form = [
-    'name' => '',
-    'email' => '',
-    'password' => '',
-    'image' => ''
-];
+var_dump($_GET['action']);
+
+if (isset($_GET['action']) && $_GET['action'] === 'rewrite' && isset($_SESSION['form'])) {
+    $form = $_SESSION['form'];
+} else {
+    $form = [
+        'name' => '',
+        'email' => '',
+        'password' => '',
+        'image' => ''
+    ];
+}
 $error = [];
-
-
 
 // フォームの内容をチェック
 //リクエストのメソッドを判定
@@ -18,6 +22,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
     if ($form['name'] === '') {
         $error['name'] = 'blank';
+    } else {
+        //db接続
+        $db = dbconnect();
+        //件数取得
+        $stmt = $db->prepare('select count(*) from members where email=?');
+        if (!$stmt) {
+            die($db->error);
+        }
+        $stmt->bind_param('s', $form['email']);
+        $success = $stmt->execute();
+        // if ($success) {
+        //     die($db->error);
+        // }
+        //結果をcntに格納
+        $stmt->bind_result($cnt);
+        $stmt->fetch();
+
+        var_dump($cnt);
+        if ($cnt > 0) {
+            $error['email'] = 'duplicate';
+        }
     }
 
     $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -102,7 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php if (isset($error['email']) && $error['email'] === 'blank') : ?>
                             <p class="error">* メールアドレスを入力してください</p>
                         <?php endif; ?>
-                        <p class="error">* 指定されたメールアドレスはすでに登録されています</p>
+                        <?php if (isset($error['email']) && $error['email'] === 'duplicate') : ?>
+                            <p class="error">* 指定されたメールアドレスはすでに登録されています</p>
+                        <?php endif; ?>
                     <dt>パスワード<span class="required">必須</span></dt>
                     <dd>
                         <input type="password" name="password" size="10" maxlength="20" value="<?php echo h($form['password']); ?>" />
