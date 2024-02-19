@@ -21,6 +21,6 @@ docker compose exec -it mariadb /bin/bash
 mysql -u root -p
 enter password: password
 show databases;
-use user;
+use mydatabase;
 show tables;
 ```

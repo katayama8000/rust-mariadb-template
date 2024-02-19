@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS mydatabase;
-USE user;
+USE mydatabase;
 
 CREATE TABLE IF NOT EXISTS mytable (
     id INT AUTO_INCREMENT PRIMARY KEY,
