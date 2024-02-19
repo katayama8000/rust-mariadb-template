@@ -1,7 +1,7 @@
 services:
-  rust_db:
+  rust:
     build:
-      context: .
+      context: Docker/rust
       dockerfile: Dockerfile
     restart: always
     tty: true
@@ -9,12 +9,16 @@ services:
       - ./:/workspace
     working_dir: /workspace
   mariadb:
-    image: mariadb
+    build:
+      context: .Docker/mariadb
+      dockerfile: Dockerfile
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: examplepassword
-      MYSQL_DATABASE: mydatabase
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: user
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     ports:
       - "3306:3306"
+    volumes:
+      - .Docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql

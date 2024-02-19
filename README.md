@@ -1,12 +1,26 @@
-## up
+## rust
+
+### up
 
 ```bash
-docker-compose up -d
-docker exec rust_db bash
+docker compose up -d
+docker compose exec rust /bin/bash
 ```
 
-## run
+### run
 
 ```bash
 cargo run
+```
+
+## mariadb
+
+```bash
+docker compose up -d
+docker compose exec -it mariadb /bin/bash
+mysql -u root -p
+enter password: password
+show databases;
+use user;
+show tables;
 ```
