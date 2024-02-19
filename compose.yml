@@ -1,7 +1,7 @@
 services:
   rust:
     build:
-      context: Docker/rust
+      context: ./Docker/rust
       dockerfile: Dockerfile
     restart: always
     tty: true
@@ -10,7 +10,7 @@ services:
     working_dir: /workspace
   mariadb:
     build:
-      context: .Docker/mariadb
+      context: ./Docker/mariadb
       dockerfile: Dockerfile
     restart: always
     environment:
