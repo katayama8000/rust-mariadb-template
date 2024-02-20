@@ -1,8 +1,7 @@
-use sqlx::mysql::MySqlPoolOptions;
+use sqlx::{mysql::MySqlPoolOptions, Row};
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
-    println!("Hello, world!");
     let pool = MySqlPoolOptions::new()
         .max_connections(5)
         .connect("mysql://myuser:mypassword@mariadb/mydatabase")
@@ -18,5 +17,11 @@ async fn main() -> Result<(), sqlx::Error> {
         .fetch_all(&pool)
         .await?;
     println!("Got {} rows", rows.len());
+    // print all
+    for row in rows {
+        let id: i32 = row.get("id");
+        let name: String = row.get("name");
+        println!("id: {}, name: {}", id, name);
+    }
     Ok(())
 }
