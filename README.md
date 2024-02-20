@@ -4,7 +4,7 @@
 
 ```bash
 docker compose up -d
-docker compose exec rust /bin/bash
+docker compose exec -it rust /bin/bash
 ```
 
 ### run
@@ -15,9 +15,16 @@ cargo run
 
 ## mariadb
 
+### up
+
 ```bash
 docker compose up -d
 docker compose exec -it mariadb /bin/bash
+```
+
+### check
+
+```bash
 mysql -u root -p
 enter password: password
 show databases;
