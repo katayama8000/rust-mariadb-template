@@ -13,11 +13,8 @@ services:
       context: ./Docker/mariadb
       dockerfile: Dockerfile
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+    env_file:
+      - ./.env
     ports:
       - "3306:3306"
     volumes:

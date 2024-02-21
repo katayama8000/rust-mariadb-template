@@ -2,6 +2,17 @@ use sqlx::{mysql::MySqlPoolOptions, Row};
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
+    // get from .env
+    // let url = format!(
+    //     "mysql://{}:{}@mariadb/{}",
+    //     std::env::var("MYSQL_USER").unwrap(),
+    //     std::env::var("MYSQL_PASSWORD").unwrap(),
+    //     std::env::var("MYSQL_DATABASE").unwrap()
+    // );
+    let vars = std::env::vars().collect::<Vec<_>>();
+    for (key, value) in vars {
+        println!("{}: {}", key, value);
+    }
     let pool = MySqlPoolOptions::new()
         .max_connections(5)
         .connect("mysql://myuser:mypassword@mariadb/mydatabase")

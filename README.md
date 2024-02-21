@@ -1,5 +1,11 @@
 ## rust
 
+### setup
+
+```bash
+cp .env.dist .env
+```
+
 ### up
 
 ```bash
