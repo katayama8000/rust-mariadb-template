@@ -37,3 +37,15 @@ show databases;
 use mydatabase;
 show tables;
 ```
+
+## devcontainer
+
+### setup
+
+```bash
+cp .env.dist .env
+```
+
+### up
+
+run devcontainer in vscode
