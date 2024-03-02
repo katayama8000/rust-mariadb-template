@@ -3,8 +3,7 @@
 ### up
 
 ```bash
-docker compose up -d
-docker compose exec -it rust /bin/bash
+make rust-up
 ```
 
 ### run
@@ -24,8 +23,7 @@ cp .env.dist .env
 ### up
 
 ```bash
-docker compose up -d
-docker compose exec -it mariadb /bin/bash
+make db-up
 ```
 
 ### check
