@@ -1,4 +1,4 @@
-.PHONY: rust-up db-up down
+.PHONY: rust-up db-up down ps
 
 rust-up:
 	docker-compose up -d
@@ -10,3 +10,6 @@ db-up:
 
 down:
 	docker-compose down
+
+ps:
+	docker-compose ps
